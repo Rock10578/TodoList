@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList</title>
+    <style>
+        .btn{
+            padding: 8px 24px;
+            background-color: black;
+            columns: #fff;
+            font-size: 18px;
+            border-radius: 3px;
+            border: none;
+        }
+        input{
+            padding: 6px 2px;
+            min-width: 320px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+     <h1>Todo List</h1>
+     <form>
+        <div class="todoLists">
+            <input type="text" value="" class="todoValue"/>
+            <button class="btn">Add Task</button>
+        </div>
+     </form>
+
+     <script>
+        const todoLists = document.querySelector(".todoLists");
+        const listValue = document.querySelector(".todoValue");
+        let todoListValue = [];
+
+        const getTodoListFromLS = () => {
+            return JSON.parse(localStorage.getItem("todoListD")) || [];
+        }
+        const addTodoListLocalStorage = (todo) => {
+            return localStorage.setItem("todoListD", JSON.stringify(todo));
+        }
+        const showTodoList = () => {
+            todoListValue = getTodoListFromLS();
+            todoListValue.forEach((curTodo) => {
+                const liElement = document.createElement("li");
+                liElement.innerHTML = curTodo;
+                todoLists.append(liElement);
+            });
+        }
+        const addTodoList = (e) => {
+            e.preventDefault();
+
+            listValue.value = "";
+            todoListValue = getTodoListFromLS();
+            let newTodo = listValue.value.trim();
+            if (newTodo.length !== 0 && !todoListValue.includes(newTodo)){
+                todoListValue.push(newTodo);
+                // todoListValue = [... new Set(todoListValue)]
+                addTodoListLocalStorage(todoListValue)
+                const liElement = document.createElement("li");
+                liElement.innerHTML = newTodo;
+                todoLists.append(liElement);
+            }
+        }
+        showTodoList();
+        
+        document.querySelector('.btn').addEventListener('click', (e) => {
+            addTodoList(e);
+        })
+     </script>
+</body>
+</html>
